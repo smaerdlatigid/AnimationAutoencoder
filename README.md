@@ -15,7 +15,7 @@ https://www.tensorflow.org/lite/models/pose_estimation/overview
 
 17 point position to Unity/Blender compliant rigged character format
 
-![](https://thumbs.gfycat.com/TinyScornfulImperatorangel-mobile.mp4)
+![](Figures/pose_example.gif)
 
 ## Procedural Animations
 17 joint positions with an x,y,z coordinate amounts to 51 model inputs. The inputs are encoded in a fully connected deep neural network into a latent space of 3 dimensions
