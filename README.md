@@ -22,8 +22,10 @@ Character animations are created from videos using a pose estimation algorithm
 ## Record data with an Azure Kinect
 
 Use the Azure Kinect Body Tracking SDK within Unity to create a series of training samples
+
 https://github.com/curiosity-inc/azure-kinect-dk-unity
 
+![](Figures/dance_party.gif)
 
 ## Procedural Animations
 17 joint positions with an x,y,z coordinate totals 51 features for the model. The inputs are encoded using a fully connected neural network into a latent space of 3 dimensions
