@@ -1,5 +1,5 @@
 # Animation Autoencoder
-Procedurally generate or interpolate between animations for a bipedal humanoid using a multi-pose autoencoder. TFlite is used within Unity to create animations in real time. The autoencoder is trained on animations from 3D content sites (e.g. https://www.mixamo.com/) and data recorded from a curated list of videos after running a pose estimation algorithm
+Procedurally generate or interpolate between animations for a bipedal humanoid using a multi-pose autoencoder. TFlite is used within Unity to create animations in real time. The autoencoder is trained on animations from 3D content sites (e.g. https://www.mixamo.com/) and data captured from Azure Kinect Body Tracking SDK. Future encoders will be trained on data recorded from a curated list of videos after running a pose estimation algorithm. 
 
 ## Dependencies
 - Python 3+
@@ -37,3 +37,29 @@ A VR demo with hand tracking controls is used to explore the latent space and pr
 Use a GAN to create animation paths in the latent space by pre-evaluating the space
 
 Use the autoencoder to smooth real-time motion capture 
+
+## Extracting data from a rigged character 
+https://answers.unity.com/questions/1591435/animate-a-character-entirely-through-xyz-coordinat.html
+
+https://docs.unity3d.com/Manual/UsingHumanoidChars.html
+
+extract the position information from each child object of a rigged model
+
+a minimum of 15 bones are required to produce a valid character model in Unity
+https://docs.unity3d.com/Manual/class-Avatar.html
+
+Tutorial on VAE: https://arxiv.org/pdf/1606.05908.pdf
+
+
+Export Animations from Unity to FBX Ascii
+https://www.youtube.com/watch?v=Hy2U0UYp6cA
+
+http://ufldl.stanford.edu/tutorial/unsupervised/Autoencoders/
+
+https://douglasduhaime.com/posts/visualizing-latent-spaces.html
+
+https://medium.com/tensorflow/variational-autoencoders-with-tensorflow-probability-layers-d06c658931b7
+
+
+Good references in: 
+https://towardsdatascience.com/gans-vs-autoencoders-comparison-of-deep-generative-models-985cf15936ea

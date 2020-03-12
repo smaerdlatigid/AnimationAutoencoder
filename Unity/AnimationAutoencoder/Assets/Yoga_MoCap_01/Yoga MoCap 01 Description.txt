@@ -1,0 +1,35 @@
+Yoga MoCap 01
+
+This package features a collection of 17 fbx animations for a bipedal humanoid character performing various Yoga moves in standing positions.
+
+Tree Pose: Right leg is bent and right foot is placed on left calf. Arms are raised above head.
+
+Dancer Pose: Right leg lifts backwards as torso moves forward, keeping head looking forward right arm moves backwards to catch right foot as it is raised, left arm is stretched up and out front.
+
+Eagle Pose: Keeping left foot on the ground right foot is raised both knees are bent, right foot crosses over left leg then hooks back behind left leg. Arms are bent and crossed at the elbow with left over right, then arms are crossed again so that palms are facing each other.
+
+Chair Pose: Feet shoulder width apart, arms raised above head, bend knees to a 90 degree angle keeping arms in line with spine.
+
+Goddess Pose: Right leg steps forward, left leg steps back, torso rotates to the left, knees are bent at 90 degrees and arms are raised with elbows bent at 90 degrees.
+
+Hand To Big Toe Pose: Right foot is held parallel to the floor, right hand reaches out and grabs right foot, left arm extends up and away from the body.
+
+Extended Hand To Big Toe Pose: Same as Hand to Big Toe Pose only once the right leg is extended it swings out and to the right while the left arm lowers to become parallel to the floor.
+
+Twisted Hand To Big Toe Pose: Right leg is raised, left hand grabs foot and leg is extended forward as right arm reaches backwards and extends parallel to the floor.
+
+Standing Split: Bending over to put both hands on the ground, right leg is lifted creating a vertical split.
+
+Side Bend Left: Feet shoulder width apart, arms raised above head, lean to the left.
+
+Side Bend Right: Feet shoulder width apart, arms raised above head, lean to the right.
+
+Reverse Namaste: Both hands brought behind back and fingers interlock.
+
+Bird of Paradise: Right leg steps forward, left leg steps back, torso is lowered and right shoulder is brought down to the left of the right knee. Right arm reaches under the right leg and up while the left arm reaches down and back to grab the right hand. Feet are brought back together, right leg is lifted with right arm still underneath, right leg is extended upwards. Right leg is lowered back down to the ground, left leg steps back, hands release, torso moves back up and feet are brought back together.
+
+Standing Pose Sequence 01 (left and right): A continuous sequence preforming Side Bends, Chair Pose, Eagle Pose, and a Standing Split.
+
+Standing Pose Sequence 02 (left and right): A continuous sequence performing Tree Pose, Dance Pose, Hand To Big Toe Pose, Extended Hand To Big Toe Pose, and Twisted Hand To Big Toe Pose.
+
+If you have any questions feel free to contact us at support@morromotion.com
