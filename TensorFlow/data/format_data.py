@@ -1,17 +1,26 @@
 import numpy as np
+import argparse
 
-f = open("unity_data.txt", "r")
-lines = f.readlines()
-f.close()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    help_ = "Load data from Unity"
+    parser.add_argument("-i","--input",help=help_)
+    help_ = "Output file name"
+    parser.add_argument("-o","--output",help=help_)
+    args = parser.parse_args()
 
-njoints = len(lines[0].split(')('))
-data = np.zeros((len(lines),njoints*4))
+    f = open(args.input, "r")
+    lines = f.readlines()
+    f.close()
 
-for i in range(len(lines)):
-    v3 = lines[i].split(")(")
-    v3[0] = v3[0][1:]
-    v3[-1] = v3[-1][:-2]
-    slist = ','.join(v3)
-    data[i] = np.array(slist.split(',')).astype(float)
+    njoints = len(lines[0].split(')('))
+    data = np.zeros((len(lines),njoints*4))
 
-np.savetxt("train.txt",data,fmt="%.3f")
+    for i in range(len(lines)):
+        v3 = lines[i].split(")(")
+        v3[0] = v3[0][1:]
+        v3[-1] = v3[-1][:-2]
+        slist = ','.join(v3)
+        data[i] = np.array(slist.split(',')).astype(float)
+
+    np.savetxt(args.output,data,fmt="%.3f")

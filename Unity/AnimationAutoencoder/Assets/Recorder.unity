@@ -569,7 +569,7 @@ MonoBehaviour:
   RecordButton: {fileID: 540703646}
   savefile: Assets/Train/train.txt
   isRecording: 0
-  recordFPS: 10
+  recordFPS: 24
 --- !u!1001 &956416904
 PrefabInstance:
   m_ObjectHideFlags: 0
