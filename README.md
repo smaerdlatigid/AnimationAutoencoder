@@ -46,7 +46,7 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         Output file name
 ```
-A variational autencoder is used and has the following format:
+A variational autencoder is trained on individual poses from motion capture data and has the following format:
 
 ![](TensorFlow/vae_mlp.png)
 
