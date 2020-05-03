@@ -1,7 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from tensorflow.keras.layers import Lambda, Input, Dense, Dropout
 from tensorflow.keras.models import Model
 from tensorflow.keras.datasets import mnist

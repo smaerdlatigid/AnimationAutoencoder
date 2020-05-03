@@ -2,45 +2,109 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
 using System; 
 
 public class AnimationRecorder : MonoBehaviour {
 
-	public string savefile;
-	public bool saving;
-    public float saveFPS = 5f;
-	StreamWriter sw;
-	// Use this for initialization
-	void Start () {
-		saving = false;
-       // sw = new StreamWriter(savefile);
-	}
-	public List<GameObject> body; 
+    public GameObject character;
 
-	float saveTime = 0f;
-	string mystring;
-	void Update () {
-        if (Input.GetKey("space"))
+    [Header("UI Elements")]
+    public Text status;
+    public Button RecordButton;
+
+    [Header("Recording Settings")]
+    public string savefile = "Assets/Train/test.txt";
+    public bool isRecording = false;
+    public float recordFPS = 5f;
+    float recordTime = 0f;
+    List<GameObject> componentList = new List<GameObject>();
+    List<string> poseList = new List<string>();
+
+    void Start () {
+
+        Transform[] allChildren = character.GetComponentsInChildren<Transform>();
+        Debug.Log("children count:" + allChildren.Length);
+
+        // recursively add children to list
+        AddDescendants(character.transform, componentList);
+    }
+
+    public void Save()
+    {
+        StreamWriter writer = new StreamWriter(savefile, true);
+        for(int i = 0; i<poseList.Count; i++)
         {
-			saving = true;
+            writer.WriteLine(poseList[i]);
         }
-		else if(Input.GetKeyUp("space"))
-		{
-			saving = false;
-		}
+        writer.Close();
+        poseList = new List<string>();
+    }
 
-        if (saving & (Time.time > saveTime+1f/saveFPS) )
+    private void AddDescendants(Transform parent, List<GameObject> list)
+    {
+        foreach (Transform child in parent)
         {
-            mystring = "";
-            for (int i = 0; i < body.Count; i++)
+            // compare names or tags if need be
+            list.Add(child.gameObject);
+            AddDescendants(child, list);
+        }
+    }
+
+    public void RandomPose()
+    {
+        if(poseList.Count > 0)
+        {
+            Debug.Log("Disable Animator to set Random Pose");
+            string posestring = poseList[(int)(UnityEngine.Random.Range(0, poseList.Count))];
+            string[] joints = posestring.Split(new string[] { ")(" }, StringSplitOptions.None);
+
+            int pi = 0;
+            foreach (string floatstring in joints)
             {
-                mystring += body[i].transform.position.ToString("f3");
-                mystring += body[i].transform.rotation.ToString("f3");
+                string[] floats = floatstring.Trim('(', ')').Split(',');
+                componentList[pi].transform.rotation = new Quaternion(
+                    float.Parse(floats[0]),
+                    float.Parse(floats[1]),
+                    float.Parse(floats[2]),
+                    float.Parse(floats[3])
+                );
+                pi += 1;
             }
-            mystring += transform.position.ToString("f3");
-            File.AppendAllText(savefile, mystring + transform.rotation.ToString("f3") + Environment.NewLine);
-			saveTime = Time.time;
-        }
 
+        }
+    }
+
+    public void ToggleRecord()
+    {
+        Debug.Log("BUTTON");
+        if(isRecording)
+        {
+            RecordButton.GetComponentInChildren<Text>().text = "Record";
+            isRecording = false;
+        }
+        else
+        {
+            RecordButton.GetComponentInChildren<Text>().text = "Stop";
+            isRecording = true;
+        }
+    }
+	
+	string writestring = "";
+	void Update () {
+
+        if (isRecording & (Time.time > recordTime) )
+        {
+            recordTime = Time.time + 1f / recordFPS;
+
+            writestring = "";
+            for (int i = 0; i < componentList.Count; i++)
+            {
+                writestring += componentList[i].transform.rotation.ToString("f3");
+            }
+            
+            poseList.Add(writestring);
+            status.text = poseList.Count.ToString();
+        }
     }
 }

@@ -1,0 +1,38 @@
+A multi-pose autoencoder for procedurally generating humanoid animations
+
+Introduction
+
+    Methods of motion capture (production level to DIY with Azure)
+        History of motion capture for bodies, how it's done in the industry, level of fidelity (17 joints, 19, etc...)
+        https://medium.com/@lumrachele/a-brief-history-of-motion-tracking-technology-and-how-it-is-used-today-44923087ef4c
+        Started with rotoscoping in 1919 for the film: out of the inkwell in which animators traced over footage, frame by frame, to produce realistic action. Mixed realism with cartoon animation
+        Early versions of motion capture: optical motion capture system and two tracking cameras, of which whose footage was traced back to render 2D motion of the actor
+
+    Introduction to Neural networks and VAEs
+        Deep learning with a neural network is a computational approach at modelling the biological way a brain solves problems using collections of neural units linked together (Rosenblatt 1958; Newell 1969). Deep nets are composed of layers of `neurons`, each of which is associated with different weights to assess the importance of one input parameter/feature compared to another. The advantage of a deep net is that it can be trained to identify very subtle features in large data sets. This learning capability is accomplished by algorithms that optimize the weights in such a way as to minimize the difference between the output of the deep net and the expected value from the training data. Deep nets have the ability to model complex non-linear relationships that may not be derivable analytically. The network does not rely on hand-designed metrics, instead it will learn the optimal features necessary to perform a task from our training data.
+        https://arxiv.org/pdf/1606.05908.pdf
+        * Introduction to VAEs, what they do, why is that good vs why not use a GAN
+          interpolate within the latent space (Mars HiRISE VAE github)
+          unsupervised learning of complicated distributions 
+        
+    How to combine the two 
+        - denoising Azure kinect + procedural generation
+        - Body Tracking SDK with Azure kinect vs PoseNET variants
+        - Bodies come in different shapes and sizes, degeneracies with interpretting from images
+
+Implementation and Training
+    - Training Data (Animations from mixamo, Unity asset store, Azure Kinect)
+    - Network Architecture (VAE, encoder vs decoder, 2D vs 3D latent space)
+    - Genetic Algorithm to optimize architecture by minimizing MSE
+
+Results
+    - 2D VAE Map with animations in latent space
+    - Take two poses and interpolate between in latent space
+    - Take a defined animation, convert it to latent space path, slightly perturb path and see what happens
+    - Errors in motion capture with Azure Kinect vs Interpolated positions with VAE and Time weighted
+
+Conclusion and Future Work
+    - training on other data (e.g. PoseNET with curated videos)
+    - hint at a GAN or LSTM algorithm being used to descriminate the realistic nature
+    - Zooniverse, community driven evaluation of animation sequences
+    - Yoga Pose Sequence example, Tai Chi, etc.
