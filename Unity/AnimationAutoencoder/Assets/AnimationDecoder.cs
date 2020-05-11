@@ -16,7 +16,7 @@ public class AnimationDecoder : MonoBehaviour {
     List<GameObject> componentList = new List<GameObject>();
 
     [Tooltip("Configurable TFLite model.")]
-    public string tfliteFileName = "mnist.tflite";
+    public string tfliteFileName = "decoder.tflite";
     private Interpreter interpreter;
 
     [Tooltip("Preprocessing mean feature vector")]
@@ -50,24 +50,33 @@ public class AnimationDecoder : MonoBehaviour {
         // recursively add children to list
         AddDescendants(character.transform, componentList);
 
+        // options
+        var options = new Interpreter.Options()
+        {
+            threads = 2,
+            gpuDelegate = CreateGpuDelegate()// useGPU ? CreateGpuDelegate() : null,
+        };
+
         // load decoder
         string path = Path.Combine(Application.streamingAssetsPath, tfliteFileName);
-        interpreter = new Interpreter(FileUtil.LoadFile(path));
+        Debug.Log(path);
+        interpreter = new Interpreter(FileUtil.LoadFile(path), options);
                 
-          Debug.LogFormat( // TODO make UI
+          Debug.LogFormat( 
             "InputCount: {0}, OutputCount: {1}",
             interpreter.GetInputTensorCount(), // always 1,1
             interpreter.GetOutputTensorCount()
         );
 
-        // TODO public 
+        // add variable for input size
         inputs = new float[2];
 
         // load mean features from file
-        path = Path.Combine(Application.streamingAssetsPath, vectorFileName);
-        string[] numbers = File.ReadAllLines(path);
+        //path = Path.Combine(Application.streamingAssetsPath, vectorFileName);
+        //string[] numbers = File.ReadAllLines(path);
+        TextAsset meanfile = Resources.Load(vectorFileName) as TextAsset;
+        string[] numbers = meanfile.text.Split(new string[] { "\n" }, StringSplitOptions.None);
         vmean = new float[componentList.Count * 4];
-
         for (int i = 0; i < numbers.Length; i++)
         {
             if (float.TryParse(numbers[i], out float parsedValue))
@@ -75,10 +84,6 @@ public class AnimationDecoder : MonoBehaviour {
                 vmean[i] = parsedValue;
             }
         }
-
-        // make sure the character and inference model are compatible
-        // Assert.AreEqual(componentList.Count * 4, interpreter.GetOutputTensorCount());
-        // interpreter doesn't know input/output sizes... must code manually for now
     }
 
 
@@ -93,27 +98,42 @@ public class AnimationDecoder : MonoBehaviour {
             outputs = new float[componentList.Count * 4];
         }
 
-        float startTimeSeconds = Time.realtimeSinceStartup;
-        interpreter.SetInputTensorData(0, inputs);
-        interpreter.Invoke();
-        interpreter.GetOutputTensorData(0, outputs);
-        float inferenceTimeSeconds = Time.realtimeSinceStartup - startTimeSeconds;
-
-        inferenceText.text = string.Format(
-            "Inference took {0:0.0000} ms\nInput(s): {1}\n",
-            inferenceTimeSeconds * 1000.0,
-            ArrayToString(inputs)
-        );
-
-        for (int i = 0; i < componentList.Count; i++)
+        if (interpreter != null)
         {
-            componentList[i].transform.rotation = new Quaternion(
-                vmean[i * 4 + 0] + outputs[i * 4 + 0],
-                vmean[i * 4 + 1] + outputs[i * 4 + 1],
-                vmean[i * 4 + 2] + outputs[i * 4 + 2],
-                vmean[i * 4 + 3] + outputs[i * 4 + 3]
+            float startTimeSeconds = Time.realtimeSinceStartup;
+            interpreter.SetInputTensorData(0, inputs);
+            interpreter.Invoke();
+            interpreter.GetOutputTensorData(0, outputs);
+            float inferenceTimeSeconds = Time.realtimeSinceStartup - startTimeSeconds;
+
+            inferenceText.text = string.Format(
+                "Inference took {0:0.0000} ms\nInput(s): {1}",
+                inferenceTimeSeconds * 1000.0,
+                ArrayToString(inputs)
             );
+
+            for (int i = 0; i < componentList.Count; i++)
+            {
+                componentList[i].transform.rotation = new Quaternion(
+                    vmean[i * 4 + 0] + outputs[i * 4 + 0],
+                    vmean[i * 4 + 1] + outputs[i * 4 + 1],
+                    vmean[i * 4 + 2] + outputs[i * 4 + 2],
+                    vmean[i * 4 + 3] + outputs[i * 4 + 3]
+                );
+            }
+
+/*            for (int i = 0; i < componentList.Count; i++)
+            {
+                componentList[i].transform.rotation = new Quaternion(
+                     outputs[i * 4 + 0],
+                     outputs[i * 4 + 1],
+                     outputs[i * 4 + 2],
+                     outputs[i * 4 + 3]
+                );
+            }*/
         }
+
+
     }
 
     void OnDestroy() 
@@ -122,6 +142,24 @@ public class AnimationDecoder : MonoBehaviour {
     }
 
     private static string ArrayToString(float[] values) {
-        return string.Join(",", values.Select(x => x.ToString()).ToArray());
+        return string.Join(",", values.Select( x => ((int)(1000 * x) / 1000f).ToString()).ToArray());
     }
+
+#pragma warning disable CS0162 // Unreachable code detected 
+    static IGpuDelegate CreateGpuDelegate()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return new GpuDelegate();
+#elif UNITY_IOS || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+            return new MetalDelegate(new MetalDelegate.Options()
+            {
+                allowPrecisionLoss = false,
+                waitType = MetalDelegate.WaitType.Passive,
+            });
+#endif
+        UnityEngine.Debug.LogWarning("GPU Delegate is not supported on this platform");
+        return null;
+    }
+#pragma warning restore CS0162 // Unreachable code detected 
+
 }
