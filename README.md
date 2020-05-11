@@ -89,4 +89,7 @@ Try it for Android: [decoder.apk](Unity/AnimationAutoencoder/decoder.apk)
 
 ## Future Work 
 
+- Latent Space Distribution Figure
+- KeyFrame Recorder
+
 The motion capture data collected for this project is available for free to the community. The algorithms presented here are for educational purposes only. Licensing fees may apply if you're interested in using this code commercially. Please contact us for more information: support@digitaldream.io
