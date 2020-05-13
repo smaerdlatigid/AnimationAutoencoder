@@ -18,7 +18,7 @@ public class AnimationRecorder : MonoBehaviour {
     public bool isRecording = false;
     public float recordFPS = 5f;
     float recordTime = 0f;
-    List<GameObject> componentList = new List<GameObject>();
+    public List<GameObject> componentList = new List<GameObject>();
     List<string> poseList = new List<string>();
 
     void Start () {
@@ -27,6 +27,7 @@ public class AnimationRecorder : MonoBehaviour {
         Debug.Log("children count:" + allChildren.Length);
 
         // recursively add children to list
+        componentList.Add(character);
         AddDescendants(character.transform, componentList);
     }
 
@@ -63,13 +64,25 @@ public class AnimationRecorder : MonoBehaviour {
             foreach (string floatstring in joints)
             {
                 string[] floats = floatstring.Trim('(', ')').Split(',');
-                componentList[pi].transform.rotation = new Quaternion(
-                    float.Parse(floats[0]),
-                    float.Parse(floats[1]),
-                    float.Parse(floats[2]),
-                    float.Parse(floats[3])
-                );
+                if (pi==0)
+                {
+                    componentList[pi].transform.position = new Vector3(
+                        float.Parse(floats[0]),
+                        float.Parse(floats[1]),
+                        float.Parse(floats[2])
+                    );
+                }
+                else
+                {
+                    componentList[pi-1].transform.rotation = new Quaternion(
+                        float.Parse(floats[0]),
+                        float.Parse(floats[1]),
+                        float.Parse(floats[2]),
+                        float.Parse(floats[3])
+                    );
+                }
                 pi += 1;
+
             }
 
         }
@@ -77,7 +90,7 @@ public class AnimationRecorder : MonoBehaviour {
 
     public void ToggleRecord()
     {
-        Debug.Log("BUTTON");
+        //Debug.Log("BUTTON");
         if(isRecording)
         {
             RecordButton.GetComponentInChildren<Text>().text = "Record";
@@ -97,14 +110,15 @@ public class AnimationRecorder : MonoBehaviour {
         {
             recordTime = Time.time + 1f / recordFPS;
 
-            writestring = "";
+            writestring = componentList[0].transform.position.ToString("f3");
             for (int i = 0; i < componentList.Count; i++)
             {
                 writestring += componentList[i].transform.rotation.ToString("f3");
             }
             
             poseList.Add(writestring);
-            status.text = poseList.Count.ToString();
         }
+
+        status.text = poseList.Count.ToString();
     }
 }

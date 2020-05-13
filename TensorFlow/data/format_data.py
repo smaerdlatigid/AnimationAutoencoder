@@ -14,7 +14,7 @@ if __name__ == '__main__':
     f.close()
 
     njoints = len(lines[0].split(')('))
-    data = np.zeros((len(lines),njoints*4))
+    data = np.zeros((len(lines),njoints*4-1))
 
     for i in range(len(lines)):
         v3 = lines[i].split(")(")

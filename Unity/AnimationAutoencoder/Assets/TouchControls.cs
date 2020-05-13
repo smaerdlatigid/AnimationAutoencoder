@@ -23,8 +23,8 @@ public class TouchControls : MonoBehaviour
 
     void Awake()
     {
-        width = (float)Screen.width / 2.0f;
-        height = (float)Screen.height / 2.0f;
+        width = (float)Screen.width / 4.0f; // -2/+2
+        height = (float)Screen.height / 4.0f;
     }
 
     // Start is called before the first frame update

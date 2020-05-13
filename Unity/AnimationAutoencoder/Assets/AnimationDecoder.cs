@@ -48,6 +48,7 @@ public class AnimationDecoder : MonoBehaviour {
 
     void Start () {
         // recursively add children to list
+        componentList.Add(character);
         AddDescendants(character.transform, componentList);
 
         // options
@@ -76,7 +77,7 @@ public class AnimationDecoder : MonoBehaviour {
         //string[] numbers = File.ReadAllLines(path);
         TextAsset meanfile = Resources.Load(vectorFileName) as TextAsset;
         string[] numbers = meanfile.text.Split(new string[] { "\n" }, StringSplitOptions.None);
-        vmean = new float[componentList.Count * 4];
+        vmean = new float[componentList.Count * 4 + 3];
         for (int i = 0; i < numbers.Length; i++)
         {
             if (float.TryParse(numbers[i], out float parsedValue))
@@ -95,7 +96,7 @@ public class AnimationDecoder : MonoBehaviour {
         if (outputs == null) {
             interpreter.ResizeInputTensor(0, new int[]{inputs.Length});
             interpreter.AllocateTensors();
-            outputs = new float[componentList.Count * 4];
+            outputs = new float[componentList.Count * 4 + 3];
         }
 
         if (interpreter != null)
@@ -114,23 +115,22 @@ public class AnimationDecoder : MonoBehaviour {
 
             for (int i = 0; i < componentList.Count; i++)
             {
+                if(i==0)
+                {
+                    componentList[0].transform.position = new Vector3(
+                       vmean[0] + outputs[0],
+                       vmean[1] + outputs[1],
+                       vmean[2] + outputs[2]
+                    );
+                }
+
                 componentList[i].transform.rotation = new Quaternion(
-                    vmean[i * 4 + 0] + outputs[i * 4 + 0],
-                    vmean[i * 4 + 1] + outputs[i * 4 + 1],
-                    vmean[i * 4 + 2] + outputs[i * 4 + 2],
-                    vmean[i * 4 + 3] + outputs[i * 4 + 3]
+                    vmean[i * 4 + 0 + 3] + outputs[i * 4 + 0 + 3],
+                    vmean[i * 4 + 1 + 3] + outputs[i * 4 + 1 + 3],
+                    vmean[i * 4 + 2 + 3] + outputs[i * 4 + 2 + 3],
+                    vmean[i * 4 + 3 + 3] + outputs[i * 4 + 3 + 3]
                 );
             }
-
-/*            for (int i = 0; i < componentList.Count; i++)
-            {
-                componentList[i].transform.rotation = new Quaternion(
-                     outputs[i * 4 + 0],
-                     outputs[i * 4 + 1],
-                     outputs[i * 4 + 2],
-                     outputs[i * 4 + 3]
-                );
-            }*/
         }
 
 
